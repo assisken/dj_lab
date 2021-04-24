@@ -1,5 +1,10 @@
 # Лаба по django
 
+## Что нужно установить
+
+- [python 3.9](https://www.python.org/downloads/)
+- [docker](https://www.docker.com/products/docker-desktop)
+
 ## Как запустить
 
 ```shell
