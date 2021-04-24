@@ -1,0 +1,42 @@
+<html>
+<head>
+
+</head>
+
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Создать">
+</form>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+        <td>ID</td>
+        <td>Фамилия</td>
+        <td>Имя</td>
+        <td>Отчество</td>
+        <td>Страна</td>
+        <td>Дополнительные действия</td>
+    </thead>
+    {% for celeb in celebs %}
+        <tr>
+            <td><a href="/{{ celeb.id }}/">{{ celeb.id }}</a></td>
+            <td>{{ celeb.first_name }}</td>
+            <td>{{ celeb.second_name }}</td>
+            <td>{{ celeb.middle_name }}</td>
+            <td>{{ celeb.country }}</td>
+            <td>
+                <form method="post" action="/{{ celeb.id }}/delete">
+                    {% csrf_token %}
+                    <input type="submit" value="Удалить">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+
+</html>

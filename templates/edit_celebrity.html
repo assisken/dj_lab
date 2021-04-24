@@ -1,0 +1,20 @@
+<html>
+<head>
+
+</head>
+
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Изменить">
+</form>
+<form method="post" action="delete">
+    {% csrf_token %}
+    <input type="submit" value="Удалить">
+</form>
+
+</body>
+
+</html>
