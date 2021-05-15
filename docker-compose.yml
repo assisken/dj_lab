@@ -1,6 +1,30 @@
-version: '3'
+version: '3.8'
+
 services:
-  redis:
-    image: redis:latest
+  webhost:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_HOST=redis_server
+      - REDIS_PORT=6379
+    tty: yes
+    volumes:
+      - ./db:/app/db
     ports:
-    - "6379:6379"
+      - "8000:8000"
+    depends_on:
+      - redis_server
+
+  redis_server:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /app/manage.py migrate
+    volumes:
+      - ./db:/app/db

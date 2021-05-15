@@ -1,6 +1,7 @@
 import json
 
 from django.http import HttpResponseRedirect
+from django.conf import settings
 from django.shortcuts import render
 from django.views import View
 
@@ -9,7 +10,7 @@ from .forms import CelebritiesForm
 
 from redis import Redis
 
-redis = Redis(host='localhost', port=6379)
+redis = Redis(settings.REDIS_HOST, port=int(settings.REDIS_PORT))
 
 
 class CelebrityCreateView(View):

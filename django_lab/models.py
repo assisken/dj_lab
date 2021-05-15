@@ -1,7 +1,8 @@
 from django.db import models
+from django.conf import settings
 from redis import Redis
 
-redis = Redis('localhost', port=6379)
+redis = Redis(settings.REDIS_HOST, port=int(settings.REDIS_PORT))
 
 
 class EurovisionCelebrities(models.Model):
