@@ -1,0 +1,34 @@
+name: Test the project
+
+on:
+  - push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build the Docker image
+        uses: docker/build-push-action@v2
+        with:
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          push: false
+          pull: true
+
+      - name: Run test
+        run: docker run -e ENV=testing ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA /app/manage.py test
+
+      - name: Push the Successful image
+        uses: docker/build-push-action@v2
+        with:
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          push: true
