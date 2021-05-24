@@ -1,0 +1,11 @@
+<nav>
+    <ul>
+        {% if user.is_authenticated %}
+            <li>Вы вошли как {{ user.username }}</li>
+            <li><a href="{% url 'django_lab:logout' %}?next=/{{ path }}">Выйти</a></li>
+        {% else %}
+            <li><a href="{% url 'django_lab:login' %}?next=/{{ path }}">Войти</a></li>
+        {% endif %}
+        <li><a href="{% url 'django_lab:registration' %}?next=/{{ path }}">Зарегистрироваться</a></li>
+    </ul>
+</nav>

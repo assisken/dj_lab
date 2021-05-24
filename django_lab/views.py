@@ -2,13 +2,14 @@ import json
 
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.contrib.auth.views import LoginView as OldLoginView
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import CreateView
+from redis import Redis
 
 from .models import EurovisionCelebrities
-from .forms import CelebritiesForm
-
-from redis import Redis
+from .forms import CelebritiesForm, RegistrationForm
 
 redis = Redis(settings.REDIS_HOST, port=int(settings.REDIS_PORT))
 
@@ -61,3 +62,22 @@ class CelebrityDeleteView(View):
         celeb.delete()
         redis.delete(pk)
         return HttpResponseRedirect('/')
+
+
+class LoginView(OldLoginView):
+    redirect_authenticated_user = True
+    template_name = 'login.html'
+
+
+class RegistrationView(CreateView):
+    form_class = RegistrationForm
+    template_name = 'registration.html'
+
+    def get_success_url(self):
+        return self.kwargs.get('next', '/')
+
+    def form_valid(self, form):
+        redirect = super().form_valid(form)
+        self.object.set_password(form.cleaned_data['password'])
+        self.object.save()
+        return redirect
